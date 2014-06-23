@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>
+		Ejemplo juego de test
+		</title>
+		<style>
+			.objeto{
+				position:absolute;
+				left:0px;
+				top:0px;
+				border:2px;
+				border-style:double;
+				background-color:white;
+				margin:5px;
+				padding:5px;
+			}
+			
+			#vid{
+				position:absolute;
+				visibility:hidden;
+				z-index:0;
+			}
+		</style>
+		<script type="text/javascript">
+			var datos=[
+			["Venezuela","Caracas",false],
+			["Colombia","Bogota",false],
+			["Chile","Santiago",false],
+			["Ecuador","Quito",false],
+			["Argentina","B.Aires",false],
+			["Brasil","Brasilia",false],
+			["Italia","Roma",false],
+			["Francia","Paris",false],
+			["Inglaterra","Londres",false],
+			["Irlanda","Dublin",false],
+			];	
+			
+			var elemobjeto;
+			var np=4; //numero de preguntas
+			var elementoenmovimiento;
+			var hacermovimiento=false;
+			var intermedio=300;
+			var col1=20;
+			var fila1=200;
+			var tamfila=50;
+			var ranuras=new Array(np);
+			
+			function loader(){
+				gameloader();
+			}
+			
+			function gameloader(){
+				var i;
+				var c;
+				var s;
+				var mx=col1;
+				var my=fila1;
+				var d;
+				var idunica;
+				
+				for (i=0;i<datos.length;i++){
+					datos[i][2]=false;
+				}
+				for (i=0;i<np;i++){
+					ranuras[i]=-100;
+				}
+				for (i=0;i<np;i++){
+					do { c= Math.floor(Math.random()*datos.length);}
+					while (datos[c][2]==true)
+					datos[c][2]=true;
+					idunica="p"+String(c);
+					d=document.createElement('pais');
+					d.innerHTML=("<div class='objeto' id='"+idunica+"'>placeholder</div>");
+					document.body.appendChild(d);
+					elemobjeto=document.getElementById(idunica);
+					elemobjeto.textContent=datos[c][0];
+					elemobjeto.style.top=String(my)+"px";
+					elemobjeto.style.left=String(mx)+"px";
+					elemobjeto.addEventListener('click',seleccionarelemento,false);
+					idunica="c"+String(c);
+					d=document.createElement('cap');
+					d.innerHTML=("<div class='objeto' id='"+idunica+"'>placeholder</div>");
+					document.body.appendChild(d);
+					elemobjeto=document.getElementById(idunica);
+					elemobjeto.textContent=datos[c][1];
+					do { s= Math.floor(Math.random()*np);}
+					while (ranuras[s]==true)
+					ranuras[s]=true;
+					elemobjeto.style.top=String(fila1+s*tamfila)+"px";
+					elemobjeto.style.left=String(col1+intermedio)+"px";
+					elemobjeto.addEventListener('click',seleccionarelemento,false);
+					my+=tamfila;					
+				}
+				document.formulario.counter.value="0";
+				return false;				
+			}
+			
+			function seleccionarelemento(event){
+				var thisx; //posicion horizontal clickeada
+				var thisxn;
+				var sc;
+				if (hacermovimiento){
+					if(this==elementoenmovimiento){
+						elementoenmovimiento.style.backgroundColor="white";
+						hacermovimiento=false;
+						return;
+					}
+					thisx=this.style.left;
+					thisx=thisx.substring(0,thisx.length-2);//elimina el px
+					thisxn=Number(thisx)+115; //para que se ubique a la derecha
+					elementoenmovimiento.style.left=String(thisxn)+"px";
+					elementoenmovimiento.style.top=this.style.top;
+					hacermovimiento=false;
+					if(this.id.substring(1)==elementoenmovimiento.id.substring(1)){
+						elementoenmovimiento.style.backgroundColor="gold";
+						this.style.backgroundColor="gold";
+						sc=1+Number(document.formulario.counter.value);
+						document.formulario.counter.value=String(sc);
+						if(sc==np){
+							vi=document.getElementById('vid');
+							vi.style.visibility="visible";
+							vi.style.zIndex="10000"; //Posicionarlo encima de cualquier otro elemento
+							vi.play();
+						}
+					}else{
+						elementoenmovimiento.style.backgroundColor="white";
+					}
+				}else{
+					hacermovimiento=true; 
+					elementoenmovimiento=this;
+					elementoenmovimiento.style.backgroundColor="tan";
+				}
+			
+			}
+			
+		</script>		
+	</head>
+
+	<body onload="loader()">
+		<h1> Ejemplo juego de test </h1>
+		Pulsa un pais y luego pulsa su capital.
+		<form name="formulario" id="formulario">
+		Acierto:<input type="text" id="counter" name="counter" value="0" size="1"> </input>
+		</form>
+		
+		<video id="vid" controls preload="auto">
+			<source src="video.mp4" type="video/mp4"></source>
+			Su navegador no acepta video HTML5.
+		</video>
+	</body>
+</html>
