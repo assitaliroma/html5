@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--
+Se tiene la opcion de guardar datos del usuario de dos maneras:
+	1. en la sesion que abre el navegador con el servidor, de esta manera las variables residiran en el servidor por 15 min si el navegador
+	no interactua con él. A pesar de que se almacena en el servidor no se necesita emplear lenguajes del lado del servidor. Esta indfrmacion es TEMPORAL
+	no pretendasguardar cosas definitivas en el servidor, para ello debes enlazar con un lenguaje del servidor
+	2. localmente en el navegador
+	
+Objeto para almacenar en sesion:
+	1. sessionStorage atributos -> length
+	Funciones:
+		1. key()
+		2.getItem();
+		3. setItem();
+		4. removeItem();
+		5. clear();
+-->
+<html>
+	<head>
+		<title>
+		Ejemplo uso de almacenamiento web
+		</title>
+		<script type="text/javascript">
+			function saveEvent(){
+				var data=document.getElementById("data").value;
+				sessionStorage.setItem("data",data);
+			}
+			function getEvent(){
+				var data=sessionStorage.getItem("data");
+				document.getElementById("data").value=data;
+			}
+			function clearEvent(){
+				sessionStorage.clear();
+				document.getElementById("data").value="";
+			}			
+		</script>		
+	</head>
+
+	<body>
+		<h1> Ejemplo uso del almacenamiento web </h1>
+		Datos: 
+		<input id="data" type="text" placeholder="Ingrese Data" autofocus>
+		<button id="saveB" name="saveB" onclick="saveEvent()"> Save </button>
+		<button id="getB" name="getB" onclick="getEvent()"> Get </button>
+		<button id="clearB" name="clearB" onclick="clearEvent()"> Clear </button>
+	</body>
+</html>

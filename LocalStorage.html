@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+Objeto para almacea en el navegador local:
+	1. localStorage atributos -> length
+	Funciones:
+		1. key()
+		2.getItem();
+		3. setItem();
+		4. removeItem();
+		5. clear();
+-->
+<html>
+	<head>
+		<title>
+		Ejemplo uso de almacenamiento web
+		</title>
+		<script type="text/javascript">
+			function saveEvent(){
+				var data=document.getElementById("data").value;
+				localStorage.setItem("data",data);
+			}
+			function getEvent(){
+				var data=localStorage.getItem("data");
+				document.getElementById("data").value=data;
+			}
+			function clearEvent(){
+				localStorage.clear();
+				document.getElementById("data").value="";
+			}				
+		</script>		
+	</head>
+
+	<body>
+		<h1> Ejemplo uso del almacenamiento web </h1>
+		Datos: 
+		<input id="data" type="text" placeholder="Ingrese Data" autofocus>
+		<button id="saveB" name="saveB" onclick="saveEvent()"> Save </button>
+		<button id="getB" name="getB" onclick="getEvent()"> Get </button>
+		<button id="clearB" name="clearB" onclick="clearEvent()"> Clear </button>
+	</body>
+</html>
