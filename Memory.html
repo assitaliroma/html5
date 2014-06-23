@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Juego de Memoria</title>
+		<style>
+		form{
+		width:330px;
+		margin:20px;
+		background-color:gray;
+		padding:20px;
+		}
+		input{
+		text-align:right;
+		}
+		</style>
+		<script type="text/javascript">
+		var canvasAncho=900;
+		var canvasLargo=400;
+		var context;
+		var primeraEleccion=true;
+		var primeraCarta;
+		var segundaCarta;
+		var colorDorso="rgb(128,0,128)";
+		var frontBgColor="rgb(0,0,200)";
+		var colorPoli="rgb(200,0,0)";
+		var colorMesa="rgb(0,0,0)";
+		var radioPoli=30;
+		var baraja=[];
+		var primersx=30;
+		var primersy=50;
+		var margen=30;
+		var cartaAncho=4*radioPoli;
+		var cartaLargo=4*radioPoli;
+		var tid;
+		var coinciden;
+		var tiempoInicio;
+			
+			//Constructor para el objeto Carta donde info es el numero de lados del poligono
+			function Carta(sx,sy,sancho,salto,info){
+				this.sx=sx;
+				this.sy=sy;
+				this.sancho=sancho;
+				this.salto=salto;
+				this.info=info;
+				this.dibujar=dibujarDorso;
+			}
+			
+			//objeto poligono a pintarse dentro de la carta
+			function PoliCarta(sx,sy,rad,n){
+				this.sx=sx;
+				this.sy=sy;
+				this.rad=rad;
+				this.dibujar=dibujarpoli;
+				this.n=n;
+				this.angulo=(2*Math.PI)/n;		
+			}
+			
+			//Funcion que se encarga de pintar el poligono a mostrar
+			function dibujarpoli(){
+				context.fillStyle=frontBgColor;
+				context.strokeStyle=colorDorso;
+				context.fillRect(this.sx-2*this.rad,this.sy-2*this.rad,4*this.rad,4*this.rad);
+				context.beginPath();
+				context.fillStyle=colorPoli;
+				var i;
+				var rad=this.rad;
+				context.moveTo(this.sx+rad*Math.cos(-.5*this.angulo),this.sy+rad*Math.sin(-.5*this.angulo));
+				for (i=1;i<this.n;i++){
+					context.lineTo(this.sx+rad*Math.cos((i-.5)*this.angulo),this.sy+rad*Math.sin((i-.5)*this.angulo));
+					
+				}
+				context.closePath();
+				context.fill();
+				
+			}
+			
+			function dibujarDorso(){
+			context.fillStyle=colorDorso;
+			context.fillRect(this.sx,this.sy,this.sancho,this.salto);
+			}
+			
+			//funcion que da vuelta a las cartas cuando no son correctas
+			function darvuelta(){
+				var carta;
+				if (!coinciden){
+					baraja[primeraCarta].dibujar();
+					baraja[segundaCarta].dibujar();
+				}else{
+					context.fillStyle=colorMesa;
+					context.fillRect(baraja[segundaCarta].sx,baraja[segundaCarta].sy,baraja[segundaCarta].sancho,baraja[segundaCarta].salto);
+					context.fillRect(baraja[primeraCarta].sx,baraja[primeraCarta].sy,baraja[primeraCarta].sancho,baraja[primeraCarta].salto);
+					baraja[segundaCarta].sx=-1;
+					baraja[primeraCarta].sx=-1;
+				}
+			}
+			
+			//Funcion que hace el efecto de barajar el mazo de cartas
+			function barajar(){
+				var i;
+				var k;
+				var swap;
+				var length=baraja.length;
+				var nt;
+				for(nt=0;nt<3*length;nt++){
+					i=Math.floor(Math.random()*length);
+					k= Math.floor(Math.random()*length);
+					swap=baraja[i].info;
+					baraja[i].info=baraja[k].info;
+					baraja[k].info=swap;
+				}
+				
+				
+			}
+		
+			//Genera 6 pares de cartas con poligonos que pueden ser desde triangulos hasta octogonos
+			function hacerBaraja(){
+				var i;
+				var aCarta;
+				var bCarta;
+				var cx=primersx;
+				var cy=primersy;
+				for (i=3;i<9;i++){
+					aCarta=new Carta(cx,cy,cartaAncho,cartaLargo,i);
+					baraja.push(aCarta);
+					bCarta= new Carta(cx,cy+cartaLargo+margen,cartaAncho,cartaLargo,i);
+					baraja.push(bCarta);
+					cx=cx+cartaAncho+margen;
+					aCarta.dibujar();
+					bCarta.dibujar();
+				}
+			}
+
+			//Funcion que maneja el evento click dentro del canvas	
+			function elige(event){
+				var mx;
+				var my;
+				var eleccion1;
+				var eleccion2;
+				var i;
+				var carta;
+				//Conocer donde clickea el usuario
+				if (event.layerX || event.layerX==0){ //firefox
+					mx=event.layerX;
+					my=event.layerY;
+				}else if(event.offsetX || event.offsetX==0){ //opera
+					mx=event.offsetX;
+					my=event.offsetY;
+				}
+				for (i=0;i<baraja.length;i++){
+					carta=baraja[i];
+					if (carta.sx>=0)//Para saber si aun sigue en juego dicha baraja y no haya sido ocultada por haber sido descubierta
+					if((mx>carta.sx)&&(mx<carta.sx+carta.sancho)&&(my>carta.sy)&&(my<carta.sy+carta.salto)){
+						if((primeraEleccion)||(i!=primeraCarta)) break; //Para evitar que pulses sobre la misma carta
+					}
+				}
+				if (i<baraja.length){//Encontramos una la carta que se clickeo
+					if(primeraEleccion){ //primera carta elegida
+						primeraCarta=i;
+						primeraEleccion=false;
+						eleccion1=new PoliCarta(carta.sx+cartaAncho*.5,carta.sy+cartaLargo*.5,radioPoli,carta.info); //Pintara el poligono
+						eleccion1.dibujar();
+					}else{
+						segundaCarta=i;
+						eleccion2=new PoliCarta(carta.sx+cartaAncho*.5,carta.sy+cartaLargo*.5,radioPoli,carta.info); //pitntara la carta cuando se trata de la segunda
+						eleccion2.dibujar();
+						if(baraja[i].info==baraja[primeraCarta].info){ //Si son las mismas cartas 
+							coinciden=true;
+							var aciertos=Number(document.formulario.counter.value)+1; //Actualizas los aciertos
+							document.formulario.counter.value=String(aciertos);
+							if (aciertos>=.5*baraja.length){ //Se termino el juego xq los acertaste todos ya
+								var now = new Date();
+								var seg= Number(now.getTime());
+								var segundos=Math.floor(.5+(seg-tiempoInicio)/1000);
+								document.formulario.timer.value=String(segundos); //Actuliza cuanto tardaste
+							}
+						}else{
+							coinciden=false;							
+						}
+						primeraEleccion=true;
+						tid=setTimeout(darvuelta,1000);						
+					}
+				}
+			}
+			//funcion que inicializa el juego
+			function loader(){		
+	
+				canvas=document.getElementById("canvas");
+				context=canvas.getContext("2d");
+				canvas.addEventListener('click',elige,false);
+
+				hacerBaraja();		
+				document.formulario.counter.value=0;
+				document.formulario.timer.value=0;
+				tiempoInicio=new Date();
+				tiempoInicio=Number(tiempoInicio.getTime());
+				barajar();
+			}
+			
+			
+		</script>
+	</head>
+
+	<body onload="loader()">
+		<canvas id="canvas" width="900" height="400">
+			No soportado
+		</canvas>
+		<br>
+		<form name="formulario" id="formulario">
+			Aciertos: <input type="text" id="counter" name="counter" value="0" size="1">
+			<p>
+			Tiempo transcurrido: <input type="text" id="timer" name="timer" value="0" size="4"> 
+			</p>
+		</form>
+	</body>
+</html>
