@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		Ejemplo de Canvas
+		</title>
+		<script type="text/javascript">
+			function cargador(){
+				var canvas= document.getElementById('canvas');
+				var context = canvas.getContext('2d');
+				
+				/*Para pintar triangulos se debe:
+				1. iniciar la funcion beginPath();
+				2. leccionar si va a ser una figura con relleno o solo con borde
+					2.1 si es con bordes (strokeStyle) o si es con relleno (fillStyle)
+				3. indicar el punto inicial del triangulo con la funcion moveTo(X,Y)donde X -> horiz. Y -> vert.
+				4. indicar los otros dos puntos del triangulo con la funcion lineTo (X,Y)
+				5. llamar a la funcion closePath();
+				6. llamar al pintado de la figura 
+					6.1 si es solo con bordes (stroke) si es con relleno (fill)
+				*/
+				
+				//Pintando triangulos solo con borde
+				
+				context.beginPath();
+				context.strokeStyle="rgba(0,0,200,0.8)";
+				context.moveTo(200,405);
+				context.lineTo(200,175);
+				context.lineTo(10,405);
+				context.closePath();
+				context.stroke();				
+				
+				//Pintando triangulo con relleno
+				
+				context.beginPath();
+				context.fillStyle="rgba(200,0,0,1)"
+				context.moveTo(400,20);
+				context.lineTo(600,20);
+				context.lineTo(400,50);
+				context.closePath();
+				context.fill();
+				
+				/*Para pintar curvas bezier se debe:
+				1. se respetan los pasos 1-3 del pintado de triangulo
+				2. Se traza la curva de bezier con la funcion bezierCurveTo(float cp1x, float cp1y,float cp2x,float 					cp2y,float x,float y)
+				3. Paso 5-6 				
+				*/
+				
+				//pintando corazon
+				context.beginPath();
+				context.fillStyle="rgba(220,0,0,1)"
+				context.moveTo(75,250);
+				context.bezierCurveTo(75,247,70,235,50,235);
+				context.bezierCurveTo(20,235,20,272.5,20,272);
+				context.bezierCurveTo(20,290,40,312,75,330);
+				context.bezierCurveTo(110,312,130,290,130,272);
+				context.bezierCurveTo(130,272.5,130,235,100,235);
+				context.bezierCurveTo(85,235,75,247,75,250);
+				context.closePath();
+				context.fill();
+
+				/*Para pintar curvas cuadraticas (1 solo punto de control) se debe:
+				1. se respetan los pasos 1-3 del pintado de triangulo
+				2. Se traza la curva cuadratica con la funcion quadraticCurveTo(float cp1x, float cp1y,float x,float 					y)
+				3. Paso 5-6 				
+				*/
+				
+				//Pintando a pacman 
+				context.beginPath();
+				context.strokeStyle="rgba (0,0,200,1)"
+				context.moveTo(275,125);
+				context.quadraticCurveTo(225,125,325,162);
+				context.quadraticCurveTo(260,200,265,200);
+				context.quadraticCurveTo(325,200,325,162);
+				context.quadraticCurveTo(325,125,275,125);
+				context.closePath();
+				context.stroke();
+
+
+				/*Para pintar arcos se debe:
+				1. se respetan los pasos 1-2 del pintado de triangulo
+				2. Se traza el arco con la funcion arc(float x, float y,float radius,float 					startAngle, float endAngle,boolean anticlockwise)
+				3. se invoca a la funcion moveTo para posicionarlo en el canvas
+				4. Paso 5-6 				
+				*/
+
+				context.beginPath();
+				context.strokeStyle="rgba (0,200,200,1)"
+				context.arc(375,275,50,0,Math.PI*2,true);				
+				context.moveTo(340,275);				
+				context.closePath();
+				context.stroke();
+
+				/*Para pintar texto se debe:
+				1. se debe especificar la fuente mediante context.font
+				2. se pinta el text usando el strokeText(string texto,float x , float y)		
+				*/
+
+				context.font='italic 40px sans-serif';
+				context.strokeText("Antonio",50,450);
+	
+			}
+		</script>		
+	</head>
+	
+	<body onload="cargador()">
+		<h1> Ejemplo de Canvas </h1>
+		<canvas id="canvas" width="600" height="500"> 
+		</canvas>
+	</body>
+</html>
