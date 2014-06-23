@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		Ejemplo de Canvas
+		</title>
+		<style type="text/css">
+			#caja1,#caja2,#caja3{
+				float:left;
+				width:250px;
+				height:250px;
+				padding:10px;
+				margin:10px;
+			}
+			#elemento1,#elemento2,#elemento3{
+				width:75px;
+				height:50px;
+				padding:10px;
+				margin:10px;
+			}
+			#caja1{
+				background-color:#8080FF;
+			}
+			#caja2{
+				background-color:#8080FF;
+			}
+			#caja3{
+				background-color:#8080FF;
+			}
+			#elemento1{
+				background-color:#CC0;
+			}
+			#elemento2{
+				background-color:#CC0;
+			}
+			#elemento3{
+				background-color:#CC0;
+			}
+		</style>
+		<script type="text/javascript">
+			//Esta funcion será invocada cuando inicie el evento drag sobre el elemento al que hallamos puesto draggable=true y que tenga la llamada a esta
+			/*
+			El objeto dataTransfer es el que me permitira manipular los eventos del drag&drop
+			cuando vaya a desplazar un objeto debo:
+				1. indicar el efecto de movimiento con el metodo effectAllowed
+				2. Obtener el Id del objeto que se esta desplazando
+				3. indicar la imagen del objeto que se desplaza, en este caso es la misma que el objeto inicial (e.target es el div)
+			*/
+			function start(event){
+				event.dataTransfer.effectAllowed='move';
+				event.dataTransfer.setData("Data",event.target.getAttribute('id'));
+				event.dataTransfer.setDragImage(event.target,0,0);
+				return true;
+			}
+			
+			/*
+			Este evento se desencadena al intentar ingresar un destino y da acceso al mismo
+			*/
+			function enter(event){
+				return true;
+			}
+			
+			/*
+			Este metodo se disparar cuando el usuario mantenga el objeto sobre el div destino, lo puedes usar para restringuir en que destino
+			puede o no entrar un elemento arrastrable.
+			Si quieres que pueda ser soltado el metodo debe retornar false, de lo contrario true.
+			*/
+			function over(event){
+				var elemento=event.dataTransfer.getData("Data"); //Obtenemos la informacion del elemento que esta siendo posicionado sobre el destino
+				var id_destino= event.target.getAttribute('id'); //Obtenemos el id del div destino donde se quiere posicionar el elemento
+				
+				if (id_destino=='caja1') 
+				return false;
+				
+				if(id_destino=='caja2' && (elemento=='elemento1' || elemento=='elemento2')){
+					return false;
+				}else if (id_destino=='caja3' && elemento=='elemento3'){
+					return false;
+				}else{
+					return true;
+				}
+
+				
+			}
+			
+			/*
+			Este evento se desencadena en el destino cuando se suelta un elemento sobre un el, para lograrlo debo:
+				1. obtener el id del elemento que deseo agregar
+				2. usar el metodo appendChild(element) para adicionar al destino este nuevo elemento
+				3. detener la repeticion del evento en el navegador
+			*/
+			function drop(event){
+				var elemento=event.dataTransfer.getData("Data");
+				event.target.appendChild(document.getElementById(elemento));
+				event.stopPropagation();
+				return true;
+			}
+			
+			/*
+			Este evento lo desencadena el elemento al ser soltado en el destino y lo usamos para limpiar la dta almacenada en dataTarnsfer
+				1. obtener el id del elemento que deseo agregar
+			*/
+			function end(event){
+				event.dataTransfer.clearData("Data");
+				return true;
+			}
+			
+			
+			
+		</script>		
+	</head>
+	
+	<body">
+		<h1> Ejemplo de Canvas </h1>	
+		<div id="caja1" ondragenter="return enter(event)" ondragover="return over(event)" ondrop="return drop(event)"> 
+			
+			<div id="elemento1" draggable="true" ondragstart="return start(event)" ondragend="return end(event)">
+			Hola
+			</div>
+			<div id="elemento2" draggable="true" ondragstart="return start(event)" ondragend="return end(event)">
+			Como
+			</div>
+			<div id="elemento3" draggable="true" ondragstart="return start(event)" ondragend="return end(event)">
+			Estas
+			</div>
+			
+		</div>
+		<div id="caja2" ondragenter="return enter(event)" ondragover="return over(event)" ondrop="return drop(event)"> 
+		</div>
+		<div id="caja3" ondragenter="return enter(event)" ondragover="return over(event)" ondrop="return drop(event)"> 
+		</div>
+	</body>
+</html>
