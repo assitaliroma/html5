@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		Ejemplo uso del history
+		</title>
+		<script type="text/javascript">
+			
+			function click(){
+				history.pushState(null, null, '?state=1');
+			}
+		</script>		
+	</head>
+<!-- 
+Cambiar URL sin tener que recargar toda la pagina, super util cuando quieras evitarrecar una pagina entera muy similar a la que ya esta cargada
+y que solo varia en muy poco. Galerias de fotos x ejemplo. Puedes hacer que cada URL nueva sea accesible y te servira para el SEO etc.
+-->
+	<body>
+		<textarea style='height:200px; width:500px;'> </textarea>
+		<br>		
+		<button onclick="click()"> Pulsame y cambia el url </button>
+	</body>
+</html>

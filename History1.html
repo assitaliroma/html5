@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		Ejemplo uso del history
+		</title>
+		<script type="text/javascript">
+			
+			//se puede conocer la longitud en el objeto history
+			function cargador(){
+				var longitud= window.history.length;
+				document.getElementById('length').innerHTML="<h1>"+"Numero spaces disponibles: "+longitud+" </h1>";
+			
+			}
+		
+			//Funcion que te pemrite regresarte 1 link en el historial del navegador
+			function back(){				
+				window.history.back();			
+			}
+			
+			//Funcion que te pemrite avanzar 1 link en el historial del navegador
+			function back(){				
+				window.history.forward();			
+			}
+			
+			//Funcion que te pemrite moverte N link en el historial del navegador
+			// si pones valores negativos se regresara y si son valores positivos avanzará
+			function go(){
+				var spaces=document.getElementById('spaces').value;
+				window.history.go(spaces);			
+			}
+			
+			/*
+			Esta funcion permite enviar data que puede ser obtenida luego por el cliente en el objeto State, para ello se debe:
+				1. crear un contenedor de la data
+				2. invocar al metodo pushState del objeto history:
+					2.1 Primer parameto es el cotenedor creado en el paso 1
+					2.2 El nombre con que se quiere referenciar a la informacion almacenada
+					2.3 Paginas web que lo mostrara (URL)
+			*/
+			function pushData(){
+				var data=document.getElementById('data').value;
+				var containerObject={container:data};
+				window.history.pushState(containerObject,"item","chapter6.html");
+			}
+			
+			/*
+			Esta funcion permite pintar data que fue prviamente enviada en el objeto State
+				
+			*/
+			function popData(event){
+				var state="Pagina"+window.location+" Datos: "+ event.state.container;
+				document.getElementById('state').innerHTML="<h1>"+state+"</h1>";
+			}
+			
+			window.addEventListener("popstate",popData,false);
+		</script>		
+	</head>
+<!-- 
+Para hacer uso del objeto puedes usar la barra de direccion para dirigirte a URLs pero cuando vayas a regresarte a tu pagina
+hazlo mediante los botones del navegador (back & forward) pues sino perderas el objeto history.
+-->
+	<body onload="cargador()" >
+		<h1> Ejemplo uso del history </h1>
+		<input type="button" value="back" name="back" onclick="back();">
+		<input type="button" value="forward" name="forward" onclick="forward();">
+		<br>
+		Spaces:
+		<input type="text" id="spaces">
+		<input type="button" value="ir" name="ir" onclick="go();">
+		<br>
+		Data para el State:
+		<input type="text" id="data">
+		<input type="button" value="Enviar" name="enviar" onclick="pushData();">
+		<div id="length"></div>
+		<br>
+		<div id="state"></div>
+		<br>
+	</body>
+</html>
