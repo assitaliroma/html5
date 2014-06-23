@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		Ejemplo de Canvas
+		</title>
+		<script type="text/javascript">
+			function cargador(){
+				var canvas= document.getElementById('canvas');
+
+				if(canvas.getContext){//Validando si tienes soportado canvas
+					var context = canvas.getContext('2d');
+
+					/*Para cargar imagenes debes:
+					1. declarar el objeto Image
+					2. invocar al metodo sr del objeto y especificar el source
+					3. crear una funcion inline para pintarla en el canvas
+					*/
+
+					var img=new Image();
+					img.src='';
+					img.onload=function (){
+						context.drawImage(img,0,0);
+						//Pudieras dibujar sobre la imagen usando figuras antes vistas	
+					}
+					
+				}else{
+					alert('Navegador no soporta canvas de HTML5');
+				}
+				
+			}
+		</script>		
+	</head>
+	
+	<body onload="cargador()">
+		<h1> Ejemplo de Canvas </h1>
+		<canvas id="canvas" width="600" height="500"> 
+		</canvas>
+	</body>
+</html>
