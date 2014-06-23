@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		Ejemplo de Canvas
+		</title>
+		<script type="text/javascript">
+			function cargador(){
+				var canvas= document.getElementById('canvas');
+				var context = canvas.getContext('2d');
+				//rgba recibe los colores en escala 0-255 para red,green,blue y un cuarto valor que va entre 0-1 que es transparencia
+				context.fillStyle="rgba(0,0,200,1)";
+				//El metodo fillRect recibe X,Y (puntos donde inicia) , altura y ancho
+				// SI sumas la altura o ancho a X o a Ypuedes hacer figuras continuas o que se solapen
+				context.fillRect(45,50,200,100);
+				context.fillStyle="rgba(0,200,0,1)";
+				context.fillRect(245,0,35,100); //
+			}
+		</script>		
+	</head>
+	
+	<body onload="cargador()">
+		<h1> Ejemplo de Canvas </h1>
+		<canvas id="canvas" width="600" height="500"> 
+		</canvas>
+	</body>
+</html>
