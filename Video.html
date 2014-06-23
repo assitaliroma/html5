@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		Ejemplo uso del audio y video
+		</title>
+		<script>
+			function falloEvent(event){
+				switch (event.target.error.code){
+					case event.target.error.MEDIA_ERR_ABORTED: alert('Has abortado el playback del video.');
+					break;
+					case event.target.error.MEDIA_ERR_NETWORK: alert('Hay roblemas en la red.');
+					break;
+					case event.target.error.MEDIA_ERR_DECODE: alert('Ha ocurrido un error en el decode del video.');
+					break;
+					case event.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED: alert('Formato de video no soportado.');
+					break;
+					default: alert('Ha ocurrido un error al reproducir el video');
+					break;
+				}
+			}
+		</script>		
+	</head>
+
+	<body onload="cargador()" >
+		<h1> Ejemplo uso del audio y video </h1>
+		<video controls height="300" width="500" autoplay src="video.mp4" onerror="falloEvent(event)">
+			<source> </source>
+		</video>
+		
+	</body>
+</html>
