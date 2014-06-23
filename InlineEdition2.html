@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		Ejemplo de edicion inline
+		</title>
+		<script type="text/javascript">
+			var iframe;
+			function cargador(){
+				iframe=document.getElementById('content');
+				iframe.contentDocument.designMode="on";
+				return true;
+			}
+			
+			function link(){
+				var url = prompt('Escriba el url:','http://');
+				if (url)
+					iframe.contentDocument.execCommand('createlink',false,url);
+			}
+			
+			window.addEventListener("cargador",onload,false);
+		</script>		
+	</head>
+
+	<body onload="cargador()">
+		<h1> Ejemplo de edicion inline </h1>
+		<div>
+			<input type="button" value="Negrita" name="negrita" onclick="iframe.contentDocument.execCommand('bold',false,null);">
+			<input type="button" value="Italica" name="italica" onclick="iframe.contentDocument.execCommand('italic',false,null);">
+			<input type="button" value="Subrayado" name="subrayado" onclick="iframe.contentDocument.execCommand('underline',false,null);">
+			<input type="button" value="Link" name="link" onclick="return link();">
+		</div>
+		<!--
+		Se puede realizar el efecto editable con el metodo designMode, para ello debemos:
+			1. tener un iframe en nuestro cuerpo html
+			2. invocar una funcion javaScript en el onload del body
+			3. dentro de esa funcion debe obtener el objeto iframe y luego empleando <objeto>.contentDocument debemos especificar que el designMode=on
+			4. agregar el manejador de eventos de windows
+			5. los botones que editaran el texto ahora ejecutarn execCommand no desde document sino desde iframe.contentDocument
+		-->
+		<iframe id="content" src="about:blank" style='border:solid black; height:300px; width:400px;'> 	
+		</iframe>
+	</body>
+</html>

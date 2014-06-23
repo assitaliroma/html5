@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+		Ejemplo de edicion inline
+		</title>
+		<script type="text/javascript">
+			function link(){
+				var url = prompt('Escriba el url:','http://');
+				if (url)
+					document.execCommand('createlink',false,url);
+			}
+		</script>		
+	</head>
+	 <!-- La dicion inline permite una mejor interaccion con l usuario, permitiendole editaren la misma pagina
+		el contenido que el desee sin necesidad de redirigirse  a otra pagina. Puede ser util si queremos realizar un edior de texto,
+		una edicion de etiquetas de fotos, etc.
+	 --> 
+	<body>
+		<h1> Ejemplo de edicion inline </h1>
+		<div>
+		<!-- Para ejecutar los comandos al documento se emplea la funcion execCommand:
+			1. en el onclick se invoca la funcion (string command, boolean interface,value)
+		--> 
+			<input type="button" value="Negrita" name="negrita" onclick="document.execCommand('bold',false,null);">
+			<input type="button" value="Italica" name="italica" onclick="document.execCommand('italic',false,null);">
+			<input type="button" value="Subrayado" name="subrayado" onclick="document.execCommand('underline',false,null);">
+			<input type="button" value="Link" name="link" onclick="return link();">
+		</div>
+		 <!-- Para hacer editable un documento html o un elemento se tienen los atributos:
+		 1. contenteditable -> true,false,inherit -> Hace editable un elemento
+		 2. designmode -> on,off  -> Hace editable un documento entero
+		 3. spellcheck -> true,false -> Correccion ortografica
+		--> 
+		<div id="cuadro" contenteditable="true" style='border:solid black; height:300px; width:400px;'> </div>
+	</body>
+</html>
